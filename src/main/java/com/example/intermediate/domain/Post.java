@@ -40,7 +40,8 @@ public class Post extends Timestamped {
   @JoinColumn(name = "member_id", nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private Member member;
-
+  @Column(nullable = false)
+  private Integer likes;
 
   // 게시글 업데이트
   public void update(PostRequestDto postRequestDto) {
@@ -51,6 +52,12 @@ public class Post extends Timestamped {
   //회원정보 검증
   public boolean validateMember(Member member) {
     return !this.member.equals(member);
+  }
+
+  public void addLike() {
+    this.likes += 1;
+    System.out.println("this.content = " + this.content);
+    System.out.println("this.likes = " + this.likes);
   }
 
 }

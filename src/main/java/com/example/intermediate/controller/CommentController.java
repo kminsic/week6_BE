@@ -41,4 +41,9 @@ public class CommentController {
       HttpServletRequest request) {
     return commentService.deleteComment(id, request);
   }
+
+  @RequestMapping(value = "/api/auth/comment/like/{id}", method = RequestMethod.GET)
+  public ResponseDto<?> addLike(@PathVariable Long id, HttpServletRequest request) {
+    return commentService.addLike(id, request);
+  }
 }
