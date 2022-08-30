@@ -15,6 +15,7 @@ import java.util.List;
 public class PostResponseAllDto {
     private Long id;
     private String title;
+    private String imgUrl;
     private String author;
     private int comments;
     private int likes;
