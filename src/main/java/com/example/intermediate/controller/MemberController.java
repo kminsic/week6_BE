@@ -7,6 +7,8 @@ import com.example.intermediate.service.MemberService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
+import com.example.intermediate.service.MypageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,5 +41,12 @@ public class MemberController {
   @RequestMapping(value = "/api/auth/member/logout", method = RequestMethod.POST)
   public ResponseDto<?> logout(HttpServletRequest request) {
     return memberService.logout(request);
+  }
+
+  private final MypageService mypageService;
+
+  @RequestMapping(value = "/api/auth/member/info", method = RequestMethod.POST)
+  public ResponseDto<?> getAllActs(HttpServletRequest request) {
+    return mypageService.getAllActs(request);
   }
 }
