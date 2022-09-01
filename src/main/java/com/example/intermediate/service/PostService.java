@@ -114,6 +114,7 @@ public class PostService {
             .title(post.getTitle())
             .content(post.getContent())
             .imgUrl(post.getImgUrl())
+            .likes(post.getLikes())
             .commentResponseDtoList(commentResponseDtoList)
             .author(post.getMember().getNickname())
             .createdAt(post.getCreatedAt())
