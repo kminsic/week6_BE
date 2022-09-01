@@ -12,12 +12,14 @@ import com.example.intermediate.repository.PostRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 
 import com.example.intermediate.repository.SubCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +30,7 @@ public class PostService {
   private final SubCommentRepository subCommentRepository;
 
   private final TokenProvider tokenProvider;
-
+  private final static Logger LOG = Logger.getGlobal();
   @Transactional
   public ResponseDto<?> createPost(PostRequestDto requestDto, HttpServletRequest request) {
     if (null == request.getHeader("Refresh-Token")) {
@@ -221,6 +223,16 @@ public class PostService {
       return null;
     }
     return tokenProvider.getMemberFromAuthentication();
+  }
+
+  // 스케쥴러에 쓰이는 게시글 정리하는 메소드
+  @Transactional
+  public void organize(Long id) {
+    Post post = postRepository.findById(id).get();
+    if (post.getComments().isEmpty()) {
+      postRepository.deleteById(id);
+      LOG.info("게시물<"+post.getTitle()+">이 삭제되었습니다");
+    }
   }
 
 

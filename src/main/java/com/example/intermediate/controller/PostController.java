@@ -49,4 +49,11 @@ public class PostController {
       HttpServletRequest request) {
     return postService.deletePost(id, request);
   }
+
+  // 테스트
+  @RequestMapping(value = "/api/post/organize/{id}", method = RequestMethod.DELETE)
+  public String organizePost(@PathVariable Long id) {
+    postService.organize(id);
+    return "scheduler complete";
+  }
 }
