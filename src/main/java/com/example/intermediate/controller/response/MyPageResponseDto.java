@@ -14,6 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class MyPageResponseDto {
     private List<PostResponseDto> postResponseDtoList;
-    private List<CommentResponseDto> commentResponseDtoList;
-    private List<SubCommentResponseDto> subCommentResponseDtoList;
+    private List<CommentResponseMyPageDto> commentResponseMyPageDtoList;
+    private List<SubCommentResponseMyPageDto> subCommentResponseMyPageDtoList;
 }

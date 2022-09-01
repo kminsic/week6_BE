@@ -205,31 +205,7 @@ public class PostService {
     postRepository.delete(post);
     return ResponseDto.success("delete success");
   }
-  public ResponseDto<?> addLike(Long id, HttpServletRequest request) {
-    if (null == request.getHeader("Refresh-Token")) {
-      return ResponseDto.fail("MEMBER_NOT_FOUND",
-              "로그인이 필요합니다.");
-    }
 
-    if (null == request.getHeader("Authorization")) {
-      return ResponseDto.fail("MEMBER_NOT_FOUND",
-              "로그인이 필요합니다.");
-    }
-
-    Member member = validateMember(request);
-    if (null == member) {
-      return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
-    }
-
-    Post post = isPresentPost(id);
-    if (null == post) {
-      return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
-    }
-
-    post.addLike();
-    postRepository.save(post);
-    return ResponseDto.success("좋아요가 정상적으로 반영되었습니다.");
-  }
 
 
   @Transactional(readOnly = true)
