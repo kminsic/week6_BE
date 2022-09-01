@@ -40,9 +40,4 @@ public class SubCommentController {
                                         HttpServletRequest request) {
         return subCommentService.deleteSubComment(id, request);
     }
-
-    @RequestMapping(value = "/api/auth/subComment/like/{id}", method = RequestMethod.GET)
-    public ResponseDto<?> addLike(@PathVariable Long id, HttpServletRequest request) {
-        return subCommentService.addLike(id, request);
-    }
 }

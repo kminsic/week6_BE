@@ -63,13 +63,14 @@ public class MypageService {
 
         // Comment 데이터 수집
         List<Comment> commentList = commentRepository.findAllByMember(member);
-        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+        List<CommentResponseMyPageDto> commentResponseMyPageDtoList = new ArrayList<>();
         for (Comment comment : commentList) {
-            commentResponseDtoList.add(
-                    CommentResponseDto.builder()
+            commentResponseMyPageDtoList.add(
+                    CommentResponseMyPageDto.builder()
                             .id(comment.getId())
                             .author(member.getNickname())
                             .content(comment.getContent())
+                            .likes(comment.getLikes())
                             .createdAt(comment.getCreatedAt())
                             .modifiedAt(comment.getModifiedAt())
                             .build()
@@ -77,13 +78,14 @@ public class MypageService {
         }
         // SubComment 데이터 수집
         List<SubComment> subCommentList = subCommentRepository.findAllByMember(member);
-        List<SubCommentResponseDto> subCommentResponseDtoList = new ArrayList<>();
+        List<SubCommentResponseMyPageDto> subCommentResponseMyPageDtoList = new ArrayList<>();
         for (SubComment subComment : subCommentList) {
-            subCommentResponseDtoList.add(
-                    SubCommentResponseDto.builder()
+            subCommentResponseMyPageDtoList.add(
+                    SubCommentResponseMyPageDto.builder()
                             .id(subComment.getId())
                             .author(member.getNickname())
                             .content(subComment.getContent())
+                            .likes(subComment.getLikes())
                             .createdAt(subComment.getCreatedAt())
                             .modifiedAt(subComment.getModifiedAt())
                             .build()
@@ -95,8 +97,8 @@ public class MypageService {
         return ResponseDto.success(
                 MyPageResponseDto.builder()
                         .postResponseDtoList(postResponseDtoList)
-                        .commentResponseDtoList(commentResponseDtoList)
-                        .subCommentResponseDtoList(subCommentResponseDtoList)
+                        .commentResponseMyPageDtoList(commentResponseMyPageDtoList)
+                        .subCommentResponseMyPageDtoList(subCommentResponseMyPageDtoList)
                         .build()
         );
     }
