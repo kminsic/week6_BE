@@ -5,7 +5,6 @@ import com.example.intermediate.domain.Comment;
 import com.example.intermediate.domain.Member;
 import com.example.intermediate.domain.Post;
 import com.example.intermediate.controller.request.PostRequestDto;
-import com.example.intermediate.domain.SubComment;
 import com.example.intermediate.jwt.TokenProvider;
 import com.example.intermediate.repository.CommentRepository;
 import com.example.intermediate.repository.PostRepository;
@@ -15,7 +14,6 @@ import java.util.Optional;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 
-import com.example.intermediate.repository.SubCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +25,6 @@ public class PostService {
 
   private final PostRepository postRepository;
   private final CommentRepository commentRepository;
-  private final SubCommentRepository subCommentRepository;
 
   private final TokenProvider tokenProvider;
   private final static Logger LOG = Logger.getGlobal();
@@ -83,27 +80,11 @@ public class PostService {
 
 
     for (Comment comment : commentList) {
-      List<SubComment> subCommentList = subCommentRepository.findAllByComment(comment);
-      List<SubCommentResponseDto> subCommentResponseDtoList = new ArrayList<>();
-      for (SubComment subComment : subCommentList) {
-        subCommentResponseDtoList.add(
-                SubCommentResponseDto.builder()
-                        .id(subComment.getId())
-                        .author(subComment.getMember().getNickname())
-                        .content(subComment.getContent())
-                        .createdAt(subComment.getCreatedAt())
-                        .modifiedAt(subComment.getModifiedAt())
-                        .build()
-        );
-      }
-
-
       commentResponseDtoList.add(
           CommentResponseDto.builder()
               .id(comment.getId())
               .author(comment.getMember().getNickname())
               .content(comment.getContent())
-              .subCommentResponseDtoList(subCommentResponseDtoList)
               .createdAt(comment.getCreatedAt())
               .modifiedAt(comment.getModifiedAt())
               .build()

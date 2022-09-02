@@ -18,42 +18,42 @@ public class PostController {
   private final PostService postService;
 
   // 게시글 작성
-  @RequestMapping(value = "/api/auth/post", method = RequestMethod.POST)
+  @RequestMapping(value = "/api/auth/posts", method = RequestMethod.POST)
   public ResponseDto<?> createPost(@RequestBody PostRequestDto requestDto,
       HttpServletRequest request) {
     return postService.createPost(requestDto, request);
   }
 
   // 상세 게시글 가져오기
-  @RequestMapping(value = "/api/post/{id}", method = RequestMethod.GET)
+  @RequestMapping(value = "/api/posts/{id}", method = RequestMethod.GET)
   public ResponseDto<?> getPost(@PathVariable Long id) {
     return postService.getPost(id);
   }
 
   // 전체 게시글 가져오기
-  @RequestMapping(value = "/api/post", method = RequestMethod.GET)
+  @RequestMapping(value = "/api/posts", method = RequestMethod.GET)
   public ResponseDto<?> getAllPosts() {
     return postService.getAllPost();
   }
 
   // 게시글 수정
-  @RequestMapping(value = "/api/auth/post/{id}", method = RequestMethod.PUT)
+  @RequestMapping(value = "/api/auth/posts/{id}", method = RequestMethod.PUT)
   public ResponseDto<?> updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto,
       HttpServletRequest request) {
     return postService.updatePost(id, postRequestDto, request);
   }
 
   //게시글 삭제
-  @RequestMapping(value = "/api/auth/post/{id}", method = RequestMethod.DELETE)
+  @RequestMapping(value = "/api/auth/posts/{id}", method = RequestMethod.DELETE)
   public ResponseDto<?> deletePost(@PathVariable Long id,
       HttpServletRequest request) {
     return postService.deletePost(id, request);
   }
 
   // 테스트
-  @RequestMapping(value = "/api/post/organize/{id}", method = RequestMethod.DELETE)
+  @RequestMapping(value = "/api/posts/organize/{id}", method = RequestMethod.DELETE)
   public String organizePost(@PathVariable Long id) {
     postService.organize(id);
-    return "scheduler complete";
+    return "scheduler completed";
   }
 }

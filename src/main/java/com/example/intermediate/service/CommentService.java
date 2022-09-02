@@ -7,7 +7,6 @@ import com.example.intermediate.domain.Comment;
 import com.example.intermediate.domain.Member;
 import com.example.intermediate.domain.Post;
 import com.example.intermediate.controller.request.CommentRequestDto;
-import com.example.intermediate.domain.SubComment;
 import com.example.intermediate.jwt.TokenProvider;
 import com.example.intermediate.repository.CommentRepository;
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 
-import com.example.intermediate.repository.SubCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,10 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentService {
 
   private final CommentRepository commentRepository;
-  private final SubCommentRepository subCommentRepository;
   private final TokenProvider tokenProvider;
   private final PostService postService;
 
+  // 댓글 작성
   @Transactional
   public ResponseDto<?> createComment(CommentRequestDto requestDto, HttpServletRequest request) {
     if (null == request.getHeader("Refresh-Token")) {
@@ -79,25 +77,11 @@ public class CommentService {
     List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
 
     for (Comment comment : commentList) {
-      List<SubComment> subCommentList = subCommentRepository.findAllByComment(comment);
-      List<SubCommentResponseDto> subCommentResponseDtoList = new ArrayList<>();
-      for (SubComment subComment : subCommentList) {
-        subCommentResponseDtoList.add(
-                SubCommentResponseDto.builder()
-                        .id(subComment.getId())
-                        .author(subComment.getMember().getNickname())
-                        .content(subComment.getContent())
-                        .createdAt(subComment.getCreatedAt())
-                        .modifiedAt(subComment.getModifiedAt())
-                        .build()
-        );
-      }
       commentResponseDtoList.add(
               CommentResponseDto.builder()
                       .id(comment.getId())
                       .author(comment.getMember().getNickname())
                       .content(comment.getContent())
-                      .subCommentResponseDtoList(subCommentResponseDtoList)
                       .createdAt(comment.getCreatedAt())
                       .modifiedAt(comment.getModifiedAt())
                       .build()
@@ -106,6 +90,7 @@ public class CommentService {
     return ResponseDto.success(commentResponseDtoList);
   }
 
+  // 댓글 수정
   @Transactional
   public ResponseDto<?> updateComment(Long id, CommentRequestDto requestDto, HttpServletRequest request) {
     if (null == request.getHeader("Refresh-Token")) {
@@ -149,6 +134,7 @@ public class CommentService {
     );
   }
 
+  // 댓글 삭제
   @Transactional
   public ResponseDto<?> deleteComment(Long id, HttpServletRequest request) {
     if (null == request.getHeader("Refresh-Token")) {
@@ -192,6 +178,5 @@ public class CommentService {
     }
     return tokenProvider.getMemberFromAuthentication();
   }
-
 
 }

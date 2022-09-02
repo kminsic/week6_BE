@@ -1,10 +1,7 @@
 package com.example.intermediate.controller;
 
 import com.example.intermediate.controller.response.ResponseDto;
-import com.example.intermediate.service.CommentService;
 import com.example.intermediate.service.LikeService;
-import com.example.intermediate.service.PostService;
-import com.example.intermediate.service.SubCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,9 +30,4 @@ public class LikeController {
         return likeService.addCommentLike(id, request);
     }
 
-    // 대댓글 좋아요
-    @RequestMapping(value = "/api/auth/subComment/like/{id}", method = RequestMethod.POST)
-    public ResponseDto<?> addSubCommentLike(@PathVariable Long id, HttpServletRequest request) {
-        return likeService.addSubCommentLike(id, request);
-    }
 }

@@ -4,11 +4,9 @@ import com.example.intermediate.controller.response.*;
 import com.example.intermediate.domain.Comment;
 import com.example.intermediate.domain.Member;
 import com.example.intermediate.domain.Post;
-import com.example.intermediate.domain.SubComment;
 import com.example.intermediate.jwt.TokenProvider;
 import com.example.intermediate.repository.CommentRepository;
 import com.example.intermediate.repository.PostRepository;
-import com.example.intermediate.repository.SubCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +21,6 @@ public class MypageService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    private final SubCommentRepository subCommentRepository;
     private final TokenProvider tokenProvider;
 
 
@@ -76,33 +73,14 @@ public class MypageService {
                             .build()
             );
         }
-        // SubComment 데이터 수집
-        List<SubComment> subCommentList = subCommentRepository.findAllByMember(member);
-        List<SubCommentResponseMyPageDto> subCommentResponseMyPageDtoList = new ArrayList<>();
-        for (SubComment subComment : subCommentList) {
-            subCommentResponseMyPageDtoList.add(
-                    SubCommentResponseMyPageDto.builder()
-                            .id(subComment.getId())
-                            .author(member.getNickname())
-                            .content(subComment.getContent())
-                            .likes(subComment.getLikes())
-                            .createdAt(subComment.getCreatedAt())
-                            .modifiedAt(subComment.getModifiedAt())
-                            .build()
-            );
-
-        }
-
 
         return ResponseDto.success(
                 MyPageResponseDto.builder()
                         .postResponseDtoList(postResponseDtoList)
                         .commentResponseMyPageDtoList(commentResponseMyPageDtoList)
-                        .subCommentResponseMyPageDtoList(subCommentResponseMyPageDtoList)
                         .build()
         );
     }
-
 
     @Transactional
     public Member validateMember(HttpServletRequest request) {
