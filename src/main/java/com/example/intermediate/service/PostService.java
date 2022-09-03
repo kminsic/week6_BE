@@ -29,7 +29,7 @@ public class PostService {
   private final TokenProvider tokenProvider;
   private final static Logger LOG = Logger.getGlobal();
   @Transactional
-  public ResponseDto<?> createPost(PostRequestDto requestDto, HttpServletRequest request) {
+  public ResponseDto<?> createPost(PostRequestDto requestDto, HttpServletRequest request) {   //
     if (null == request.getHeader("Refresh-Token")) {
       return ResponseDto.fail("MEMBER_NOT_FOUND",
           "로그인이 필요합니다.");

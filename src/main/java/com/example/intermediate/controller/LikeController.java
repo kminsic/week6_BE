@@ -18,14 +18,14 @@ public class LikeController {
     private final LikeService likeService;
 
     // 게시글 좋아요
-    @RequestMapping(value = "/api/auth/post/like/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/auth/posts/like/{id}", method = RequestMethod.POST)
     public ResponseDto<?> addPostLike(@PathVariable Long id, HttpServletRequest request) {
         return likeService.addPostLike(id, request);
 //        return likeService.addPostLike(id, request);
     }
 
     // 댓글 좋아요
-    @RequestMapping(value = "/api/auth/comment/like/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/auth/comments/like/{id}", method = RequestMethod.POST)
     public ResponseDto<?> addCommentLike(@PathVariable Long id, HttpServletRequest request) {
         return likeService.addCommentLike(id, request);
     }
