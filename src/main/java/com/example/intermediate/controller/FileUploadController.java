@@ -14,6 +14,7 @@ public class FileUploadController {
 
     private final FileUploadService fileUploadService;
 
+    // 파일 업로드
     @PostMapping("/api/upload")
     public ResponseDto<?> uploadImage(@RequestPart MultipartFile file) {
         return fileUploadService.uploadImage(file);
