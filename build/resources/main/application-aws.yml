@@ -1,16 +1,14 @@
 cloud:
   aws:
     s3:
-      bucket: mygreensparta # AWS S3 Bucket Name
+      bucket: minipro-bucket # AWS S3 Bucket Name
     region:
       static: ap-northeast-2 # AWS Region
     stack:
       auto: false
     credentials:
-      instanceProfile: true  # AWS CLI 에서 aws configure list 정보를 반영할지의 여부
-      accessKey: { Accesskey 입력 }
-      secretKey: {Secret Key 입력}
-
+      accessKey: AKIAQFBK5SIWSXTCSW6Z
+      secretKey: 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
 #cloud:
 #  aws:
 #    credentials:
