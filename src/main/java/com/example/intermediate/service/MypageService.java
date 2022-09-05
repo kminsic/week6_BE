@@ -25,7 +25,7 @@ public class MypageService {
 
 
     public ResponseDto<?> getAllActs(HttpServletRequest request) {
-        if (null == request.getHeader("Refresh-Token")) {
+        if (null == request.getHeader("RefreshToken")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
                     "로그인이 필요합니다.");
         }
@@ -65,7 +65,7 @@ public class MypageService {
             commentResponseMyPageDtoList.add(
                     CommentResponseMyPageDto.builder()
                             .id(comment.getId())
-                            .author(member.getNickname())
+                            .nickname(member.getNickname())
                             .content(comment.getContent())
                             .likes(comment.getLikes())
                             .createdAt(comment.getCreatedAt())
@@ -84,7 +84,7 @@ public class MypageService {
 
     @Transactional
     public Member validateMember(HttpServletRequest request) {
-        if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
+        if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
             return null;
         }
         return tokenProvider.getMemberFromAuthentication();

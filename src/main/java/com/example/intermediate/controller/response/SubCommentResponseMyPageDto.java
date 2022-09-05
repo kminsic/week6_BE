@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class SubCommentResponseMyPageDto {
     private Long id;
-    private String author;
+    private String nickname;
     private String content;
     private int likes;
     private LocalDateTime createdAt;

@@ -6,11 +6,7 @@ import com.example.intermediate.service.CommentService;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Validated
 @RequiredArgsConstructor
@@ -20,7 +16,7 @@ public class CommentController {
   private final CommentService commentService;
 
   // 댓글 작성
-  @RequestMapping(value = "/api/auth/comments", method = RequestMethod.POST)
+  @PostMapping("/api/auth/comments")
   public ResponseDto<?> createComment(@RequestBody CommentRequestDto requestDto,
       HttpServletRequest request) {
     return commentService.createComment(requestDto, request);

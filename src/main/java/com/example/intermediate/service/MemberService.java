@@ -96,7 +96,7 @@ public class MemberService {
 
 //  @Transactional
 //  public ResponseDto<?> reissue(HttpServletRequest request, HttpServletResponse response) {
-//    if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
+//    if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
 //      return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
 //    }
 //    Member member = tokenProvider.getMemberFromAuthentication();
@@ -108,7 +108,7 @@ public class MemberService {
 //    Authentication authentication = tokenProvider.getAuthentication(request.getHeader("Access-Token"));
 //    RefreshToken refreshToken = tokenProvider.isPresentRefreshToken(member);
 //
-//    if (!refreshToken.getValue().equals(request.getHeader("Refresh-Token"))) {
+//    if (!refreshToken.getValue().equals(request.getHeader("RefreshToken"))) {
 //      return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
 //    }
 //
@@ -119,7 +119,7 @@ public class MemberService {
 //  }
 
   public ResponseDto<?> logout(HttpServletRequest request) {
-    if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
+    if (!tokenProvider.validateToken(request.getHeader("RefreshToken"))) {
       return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
     }
     Member member = tokenProvider.getMemberFromAuthentication();
@@ -138,7 +138,7 @@ public class MemberService {
 
   public void tokenToHeaders(TokenDto tokenDto, HttpServletResponse response) {
     response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
-    response.addHeader("Refresh-Token", tokenDto.getRefreshToken());
+    response.addHeader("RefreshToken", tokenDto.getRefreshToken());
     response.addHeader("Access-Token-Expire-Time", tokenDto.getAccessTokenExpiresIn().toString());
   }
 

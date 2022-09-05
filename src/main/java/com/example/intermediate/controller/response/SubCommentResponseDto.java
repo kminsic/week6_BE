@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class SubCommentResponseDto {
     private Long id;
-    private String author;
+    private String nickname;
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
