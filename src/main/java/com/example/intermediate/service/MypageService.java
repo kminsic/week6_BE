@@ -51,7 +51,7 @@ public class MypageService {
                             .content(post.getContent())
                             .imgUrl(post.getImgUrl())
                             .likes(post.getLikes())
-                            .author(member.getNickname())
+                            .nickname(member.getNickname())
                             .createdAt(post.getCreatedAt())
                             .modifiedAt(post.getModifiedAt())
                             .build()

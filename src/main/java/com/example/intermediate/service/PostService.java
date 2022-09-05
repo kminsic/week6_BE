@@ -1,22 +1,31 @@
 package com.example.intermediate.service;
 
-import com.example.intermediate.controller.response.*;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.example.intermediate.controller.request.PostRequestDto;
+import com.example.intermediate.controller.response.CommentResponseDto;
+import com.example.intermediate.controller.response.PostResponseAllDto;
+import com.example.intermediate.controller.response.PostResponseDto;
+import com.example.intermediate.controller.response.ResponseDto;
 import com.example.intermediate.domain.Comment;
 import com.example.intermediate.domain.Member;
 import com.example.intermediate.domain.Post;
-import com.example.intermediate.controller.request.PostRequestDto;
+import com.example.intermediate.external.UploadService;
 import com.example.intermediate.jwt.TokenProvider;
 import com.example.intermediate.repository.CommentRepository;
 import com.example.intermediate.repository.PostRepository;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.logging.Logger;
-import javax.servlet.http.HttpServletRequest;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 
 @Service
@@ -28,16 +37,17 @@ public class PostService {
 
   private final TokenProvider tokenProvider;
   private final static Logger LOG = Logger.getGlobal();
+  private final UploadService s3Service;
   @Transactional
-  public ResponseDto<?> createPost(PostRequestDto requestDto, HttpServletRequest request) {   //
+  public ResponseDto<?> createPost(PostRequestDto requestDto, HttpServletRequest request,MultipartFile file) {   //
     if (null == request.getHeader("Refresh-Token")) {
       return ResponseDto.fail("MEMBER_NOT_FOUND",
-          "로그인이 필요합니다.");
+              "로그인이 필요합니다.");
     }
 
     if (null == request.getHeader("Authorization")) {
       return ResponseDto.fail("MEMBER_NOT_FOUND",
-          "로그인이 필요합니다.");
+              "로그인이 필요합니다.");
     }
 
     Member member = validateMember(request);
@@ -45,10 +55,23 @@ public class PostService {
       return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
     }
 
+    String fileName = createFileName(file.getOriginalFilename());  // 파일 이름을 유니크한 이름으로 재지정. 같은 이름의 파일을 업로드 하면 overwrite 됨
+    ObjectMetadata objectMetadata = new ObjectMetadata();
+    objectMetadata.setContentType(file.getContentType());
+    objectMetadata.setContentLength(file.getSize());
+    try (InputStream inputStream = file.getInputStream()) {
+      s3Service.uploadFile(inputStream, objectMetadata, fileName);
+    } catch (IOException e) {
+      throw new IllegalArgumentException(String.format("파일 변환 중 에러가 발생하였습니다 (%s)", file.getOriginalFilename()));
+    }
+     ResponseDto.success(s3Service.getFileUrl(fileName));
+
+
+
     Post post = Post.builder()
         .title(requestDto.getTitle())
         .content(requestDto.getContent())
-        .imgUrl(requestDto.getImgUrl())
+        .imgUrl(s3Service.getFileUrl(fileName))
         .likes(0)
         .member(member)
         .build();
@@ -60,7 +83,7 @@ public class PostService {
             .content(post.getContent())
             .imgUrl(post.getImgUrl())
             .likes(post.getLikes())
-            .author(post.getMember().getNickname())
+            .nickname(post.getMember().getNickname())
             .createdAt(post.getCreatedAt())
             .modifiedAt(post.getModifiedAt())
             .build()
@@ -83,7 +106,7 @@ public class PostService {
       commentResponseDtoList.add(
           CommentResponseDto.builder()
               .id(comment.getId())
-              .author(comment.getMember().getNickname())
+              .nickname(comment.getMember().getNickname())
               .content(comment.getContent())
               .createdAt(comment.getCreatedAt())
               .modifiedAt(comment.getModifiedAt())
@@ -99,7 +122,7 @@ public class PostService {
             .imgUrl(post.getImgUrl())
             .likes(post.getLikes())
             .commentResponseDtoList(commentResponseDtoList)
-            .author(post.getMember().getNickname())
+            .nickname(post.getMember().getNickname())
             .createdAt(post.getCreatedAt())
             .modifiedAt(post.getModifiedAt())
             .build()
@@ -213,6 +236,18 @@ public class PostService {
     if (post.getComments().isEmpty()) {
       postRepository.deleteById(id);
       LOG.info("게시물<"+post.getTitle()+">이 삭제되었습니다");
+    }
+  }
+
+  private String createFileName(String originalFileName) {
+    return UUID.randomUUID().toString().concat(getFileExtension(originalFileName));
+  }
+
+  private String getFileExtension(String fileName) {
+    try {
+      return fileName.substring(fileName.lastIndexOf("."));
+    } catch (StringIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException(String.format("잘못된 형식의 파일 (%s) 입니다", fileName));
     }
   }
 

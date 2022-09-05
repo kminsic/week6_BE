@@ -9,6 +9,8 @@ import com.example.intermediate.controller.response.ResponseDto;
 import com.example.intermediate.controller.request.TokenDto;
 import com.example.intermediate.jwt.TokenProvider;
 import com.example.intermediate.repository.MemberRepository;
+
+import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RequiredArgsConstructor
 @Service
@@ -58,12 +61,16 @@ public class MemberService {
   }
 
   @Transactional
-  public ResponseDto<?> login(LoginRequestDto requestDto, HttpServletResponse response) {
+  public ResponseDto<?> login(LoginRequestDto requestDto, HttpServletResponse response ) {
+    System.out.println(response);
+
     Member member = isPresentMember(requestDto.getNickname());
+
     if (null == member) {
       return ResponseDto.fail("MEMBER_NOT_FOUND",
           "사용자를 찾을 수 없습니다.");
     }
+
 
     if (!member.validatePassword(passwordEncoder, requestDto.getPassword())) {
       return ResponseDto.fail("INVALID_MEMBER", "사용자를 찾을 수 없습니다.");
@@ -75,6 +82,7 @@ public class MemberService {
 
     TokenDto tokenDto = tokenProvider.generateTokenDto(member);
     tokenToHeaders(tokenDto, response);
+
 
     return ResponseDto.success(
         MemberResponseDto.builder()

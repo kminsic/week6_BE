@@ -30,6 +30,10 @@ public class Member extends Timestamped {
   @JsonIgnore
   private String password;
 
+
+
+
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

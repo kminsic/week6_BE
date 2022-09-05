@@ -2,14 +2,12 @@ package com.example.intermediate.controller;
 
 import com.example.intermediate.controller.request.PostRequestDto;
 import com.example.intermediate.controller.response.ResponseDto;
+import com.example.intermediate.service.FileUploadService;
 import com.example.intermediate.service.PostService;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
@@ -17,12 +15,20 @@ public class PostController {
 
   private final PostService postService;
 
+
   // 게시글 작성
   @RequestMapping(value = "/api/auth/posts", method = RequestMethod.POST)
-  public ResponseDto<?> createPost(@RequestBody PostRequestDto requestDto,
-      HttpServletRequest request) {
-    return postService.createPost(requestDto, request);
+  public ResponseDto<?> createPost(@RequestPart(value = "content") PostRequestDto requestDto,
+      HttpServletRequest request,@RequestPart(value = "image") MultipartFile file) {
+    return postService.createPost(requestDto, request,file);
   }
+
+  //이미지 업로드
+//  @RequestMapping(value = "/api/auth/posts", method = RequestMethod.POST)
+//  public ResponseDto<?> uploadImage(@RequestPart MultipartFile file) {
+//    return fileUploadService.uploadImage(file);
+//  }
+
 
   // 상세 게시글 가져오기
   @RequestMapping(value = "/api/posts/{id}", method = RequestMethod.GET)
